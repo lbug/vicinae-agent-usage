@@ -1,0 +1,81 @@
+{
+  "$schema": "https://raw.githubusercontent.com/vicinaehq/vicinae/refs/heads/main/extra/schemas/extension.json",
+  "name": "agent-usage-tracker",
+  "title": "Agent Usage",
+  "description": "Rate limits and spend of the coding agents you actually use: Claude Code, Codex and OpenRouter.",
+  "categories": [
+    "Developer Tools",
+    "Productivity"
+  ],
+  "keywords": [
+    "claude",
+    "codex",
+    "openrouter",
+    "usage",
+    "limits",
+    "quota",
+    "cost"
+  ],
+  "platforms": [
+    "Linux"
+  ],
+  "license": "MIT",
+  "author": "lbug",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lbug/vicinae-agent-usage"
+  },
+  "version": "0.1.0",
+  "contributors": [],
+  "pastContributors": [],
+  "icon": "icon.svg",
+  "commands": [
+    {
+      "name": "usage",
+      "title": "Agent Usage",
+      "subtitle": "Agent Usage",
+      "description": "Claude Code and Codex rate limits with reset times, OpenRouter spend today, this week and this month.",
+      "mode": "view"
+    }
+  ],
+  "preferences": [
+    {
+      "name": "claudeConfigDirs",
+      "title": "Additional Claude config dirs",
+      "description": "Comma-separated CLAUDE_CONFIG_DIR paths of further Claude accounts, e.g. ~/.claude-work. ~/.claude is always included.",
+      "type": "textfield",
+      "required": false,
+      "default": "",
+      "placeholder": "~/.claude-work"
+    },
+    {
+      "name": "openrouterApiKey",
+      "title": "OpenRouter API key",
+      "description": "Optional. By default the key OpenCode uses is read from its database, then OPENROUTER_API_KEY.",
+      "type": "password",
+      "required": false,
+      "default": ""
+    },
+    {
+      "name": "openrouterManagementKey",
+      "title": "OpenRouter management key",
+      "description": "Optional. Adds spend across all your API keys, not just the one OpenCode uses.",
+      "type": "password",
+      "required": false,
+      "default": ""
+    }
+  ],
+  "scripts": {
+    "build": "vici build",
+    "dev": "vici develop",
+    "lint": "vici lint",
+    "test": "node --test test/*.test.ts"
+  },
+  "dependencies": {
+    "@vicinae/api": "^0.29.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.2"
+  }
+}
