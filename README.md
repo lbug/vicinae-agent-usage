@@ -1,5 +1,7 @@
 # Agent Usage for Vicinae
 
+![Agent Usage in Vicinae (example data)](docs/screenshot.png)
+
 Rate limits and spend of the coding agents you actually use — Claude Code,
 Codex and OpenRouter — in [Vicinae](https://vicinae.com). Inspired by the
 Raycast extension [Agent Usage](https://www.raycast.com/thuggyduck/agent-usage),
