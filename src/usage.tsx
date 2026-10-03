@@ -113,7 +113,7 @@ function summary(cards: UsageCard[]): string {
 
 function rowAccessories(card: UsageCard): List.Item.Accessory[] {
   if (card.error && !card.staleSince) {
-    const notConfigured = /^(Not logged in|No API key|No management key)/.test(card.error);
+    const notConfigured = /^(Not logged in|No API key)/.test(card.error);
     return [
       {
         icon: notConfigured ? undefined : { source: Icon.Warning, tintColor: Color.Orange },
@@ -220,9 +220,12 @@ async function fetchAll(prefs: Preferences.Usage): Promise<UsageCard[]> {
     fetchOpenRouterCard(prefs.openrouterApiKey ?? "", prefs.openrouterManagementKey ?? "")
       .then((card) => [card])
       .catch(failed("openrouter")),
-    fetchXaiCard(prefs.xaiManagementKey ?? "", prefs.xaiTeamId ?? "")
-      .then((card) => [card])
-      .catch(failed("xai")),
+    // Left out until a management key is set: most people have no xAI API account.
+    prefs.xaiManagementKey?.trim()
+      ? fetchXaiCard(prefs.xaiManagementKey, prefs.xaiTeamId ?? "")
+          .then((card) => [card])
+          .catch(failed("xai"))
+      : Promise.resolve([]),
   ]);
   return groups.flat();
 }

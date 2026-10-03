@@ -40,12 +40,10 @@ async function get<T>(path: string, key: string): Promise<T> {
   return (await response.json()) as T;
 }
 
+/** Only called with a management key set; without one the list has no xAI row. */
 export async function fetchXaiCard(managementKey: string, teamIdPreference: string): Promise<UsageCard> {
   const card: UsageCard = { id: "xai", provider: "xai", meters: [], stats: [] };
   const key = managementKey.trim();
-  if (!key) {
-    return { ...card, error: "No management key — create one in the xAI Console (Settings → Management Keys) and add it in the preferences." };
-  }
 
   const teamId = teamIdPreference.trim() || teamIdOf(await get<KeyValidation>("/auth/management-keys/validation", key));
   if (!teamId) return { ...card, error: "Could not tell which team the management key belongs to — set the team ID in the preferences." };

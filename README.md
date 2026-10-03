@@ -59,7 +59,7 @@ login shows a hint instead; starting `claude` or `codex` once renews it.
   of the account instead of only OpenCode's key, and the detail panel breaks
   it down per key. It is only used to read `/api/v1/keys`.
 - **xAI management key** — optional; create one in the xAI Console under
-  Settings → Management Keys. Without it the xAI row shows "Not configured".
+  Settings → Management Keys. Without it there is no xAI row.
 - **xAI team ID** — optional; normally looked up from the management key.
 
 ## Development
