@@ -3,16 +3,17 @@
 ![Agent Usage in Vicinae (example data)](docs/screenshot.png)
 
 Rate limits and spend of the coding agents you actually use — Claude Code,
-Codex and OpenRouter — in [Vicinae](https://vicinae.com). Inspired by the
+Codex, OpenRouter and xAI — in [Vicinae](https://vicinae.com). Inspired by the
 Raycast extension [Agent Usage](https://www.raycast.com/thuggyduck/agent-usage),
-cut down to three providers and adapted to Linux credential locations.
+cut down to four providers and adapted to Linux credential locations.
 
 ## Command
 
 ### Agent Usage
 
 One row per account. Claude Code and Codex show a progress ring with the
-limit that runs out first; OpenRouter shows today's spend. The detail panel
+limit that runs out first; OpenRouter shows today's spend and xAI the prepaid
+balance. The detail panel
 (open by default, `Ctrl+D`) lists every limit as a bar with its reset time,
 plus spend, balance and extra usage.
 
@@ -35,6 +36,12 @@ time they are from.
 | Claude Code | `~/.claude/.credentials.json` (+ extra config dirs) | `api.anthropic.com/api/oauth/usage` | 5h session, weekly, model-specific weekly limits, extra usage |
 | Codex | `$CODEX_HOME/auth.json` (default `~/.codex`) | `chatgpt.com/backend-api/wham/usage` | 5h and weekly limits, credits |
 | OpenRouter | OpenCode's key from `~/.local/share/opencode/opencode.db`, else `OPENROUTER_API_KEY` | `/api/v1/key`, `/api/v1/credits`, `/api/v1/keys` | Spend today / this week / this month, key limit, credit balance |
+| xAI | Management key from the preferences | `management-api.x.ai/auth/management-keys/validation`, `/v1/billing/teams/{team}/prepaid/balance` | Prepaid API balance |
+
+xAI only covers the prepaid **API** balance. SuperGrok / X Premium limits, and
+Grok in the car, have no usage endpoint that this extension could read. The xAI
+endpoints follow xAI's documentation and have not been checked against a live
+account yet — in particular the sign of the balance.
 
 OpenRouter counts days, weeks and months in **UTC** — "today" starts at
 02:00 CEST / 01:00 CET.
@@ -51,6 +58,9 @@ login shows a hint instead; starting `claude` or `codex` once renews it.
 - **OpenRouter management key** — optional; spend is then summed over all keys
   of the account instead of only OpenCode's key, and the detail panel breaks
   it down per key. It is only used to read `/api/v1/keys`.
+- **xAI management key** — optional; create one in the xAI Console under
+  Settings → Management Keys. Without it the xAI row shows "Not configured".
+- **xAI team ID** — optional; normally looked up from the management key.
 
 ## Development
 

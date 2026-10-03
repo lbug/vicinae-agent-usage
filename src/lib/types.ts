@@ -1,4 +1,4 @@
-export type ProviderId = "claude" | "codex" | "openrouter";
+export type ProviderId = "claude" | "codex" | "openrouter" | "xai";
 
 /** A rate-limit window: how much of it is used and when it starts over. */
 export interface Meter {

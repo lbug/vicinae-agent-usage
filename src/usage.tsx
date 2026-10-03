@@ -14,12 +14,14 @@ import { fetchClaudeCards } from "./lib/claude";
 import { fetchCodexCard } from "./lib/codex";
 import { fetchOpenRouterCard } from "./lib/openrouter";
 import { keepLastGood, type Snapshot } from "./lib/snapshot";
+import { fetchXaiCard } from "./lib/xai";
 import type { Meter, ProviderId, Stat, UsageCard } from "./lib/types";
 
 const PROVIDERS: Record<ProviderId, { name: string; short: string; icon: string; dashboard: string }> = {
   claude: { name: "Claude Code", short: "Claude", icon: "logo-claude.svg", dashboard: "https://claude.ai/settings/usage" },
   codex: { name: "Codex", short: "Codex", icon: "logo-codex.svg", dashboard: "https://chatgpt.com/codex/settings/usage" },
   openrouter: { name: "OpenRouter", short: "OR", icon: "logo-openrouter.svg", dashboard: "https://openrouter.ai/activity" },
+  xai: { name: "xAI (Grok)", short: "xAI", icon: "logo-xai.svg", dashboard: "https://console.x.ai" },
 };
 
 const cache = new Cache();
@@ -111,7 +113,7 @@ function summary(cards: UsageCard[]): string {
 
 function rowAccessories(card: UsageCard): List.Item.Accessory[] {
   if (card.error && !card.staleSince) {
-    const notConfigured = /^(Not logged in|No API key)/.test(card.error);
+    const notConfigured = /^(Not logged in|No API key|No management key)/.test(card.error);
     return [
       {
         icon: notConfigured ? undefined : { source: Icon.Warning, tintColor: Color.Orange },
@@ -218,6 +220,9 @@ async function fetchAll(prefs: Preferences.Usage): Promise<UsageCard[]> {
     fetchOpenRouterCard(prefs.openrouterApiKey ?? "", prefs.openrouterManagementKey ?? "")
       .then((card) => [card])
       .catch(failed("openrouter")),
+    fetchXaiCard(prefs.xaiManagementKey ?? "", prefs.xaiTeamId ?? "")
+      .then((card) => [card])
+      .catch(failed("xai")),
   ]);
   return groups.flat();
 }
@@ -236,7 +241,7 @@ export default function Command() {
     setSnapshot(next);
     setIsLoading(false);
     cache.set(CACHE_KEY, JSON.stringify(next));
-  }, [prefs.claudeConfigDirs, prefs.openrouterApiKey, prefs.openrouterManagementKey]);
+  }, [prefs.claudeConfigDirs, prefs.openrouterApiKey, prefs.openrouterManagementKey, prefs.xaiManagementKey, prefs.xaiTeamId]);
 
   useEffect(() => {
     const cached = readCache();

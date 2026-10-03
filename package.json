@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/vicinaehq/vicinae/refs/heads/main/extra/schemas/extension.json",
   "name": "agent-usage-tracker",
   "title": "Agent Usage",
-  "description": "Rate limits and spend of the coding agents you actually use: Claude Code, Codex and OpenRouter.",
+  "description": "Rate limits and spend of the coding agents you actually use: Claude Code, Codex, OpenRouter and xAI.",
   "categories": [
     "Developer Tools",
     "Productivity"
@@ -11,6 +11,8 @@
     "claude",
     "codex",
     "openrouter",
+    "xai",
+    "grok",
     "usage",
     "limits",
     "quota",
@@ -61,6 +63,22 @@
       "title": "OpenRouter management key",
       "description": "Optional. Adds spend across all your API keys, not just the one OpenCode uses.",
       "type": "password",
+      "required": false,
+      "default": ""
+    },
+    {
+      "name": "xaiManagementKey",
+      "title": "xAI management key",
+      "description": "Optional. Shows your xAI (Grok) prepaid API balance. Create one in the xAI Console under Settings → Management Keys.",
+      "type": "password",
+      "required": false,
+      "default": ""
+    },
+    {
+      "name": "xaiTeamId",
+      "title": "xAI team ID",
+      "description": "Optional. Looked up from the management key; only needed if that fails.",
+      "type": "textfield",
       "required": false,
       "default": ""
     }

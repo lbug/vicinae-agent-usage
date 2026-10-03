@@ -14,6 +14,12 @@ type ExtensionPreferences = {
 
 	/** OpenRouter management key - Optional. Adds spend across all your API keys, not just the one OpenCode uses. */
 	"openrouterManagementKey"?: string;
+
+	/** xAI management key - Optional. Shows your xAI (Grok) prepaid API balance. Create one in the xAI Console under Settings → Management Keys. */
+	"xaiManagementKey"?: string;
+
+	/** xAI team ID - Optional. Looked up from the management key; only needed if that fails. */
+	"xaiTeamId"?: string;
 }
 
 declare type Preferences = ExtensionPreferences

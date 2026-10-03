@@ -4,6 +4,7 @@ import { parseClaudeUsage } from "../src/lib/claude.ts";
 import { parseCodexUsage } from "../src/lib/codex.ts";
 import { buildOpenRouterUsage, nextUtcReset } from "../src/lib/openrouter.ts";
 import { keepLastGood } from "../src/lib/snapshot.ts";
+import { buildXaiUsage, teamIdOf } from "../src/lib/xai.ts";
 
 // Shape of a real /api/oauth/usage response (2026-09-30), including the unknown codename keys; numbers made up.
 const claudeResponse = {
@@ -128,6 +129,27 @@ test("OpenRouter: weekly limits reset on the next UTC Monday", () => {
   assert.equal(nextUtcReset("weekly", new Date("2026-10-05T12:00:00Z")), "2026-10-12T00:00:00.000Z"); // Monday
   assert.equal(nextUtcReset("daily", new Date("2026-12-31T23:00:00Z")), "2027-01-01T00:00:00.000Z");
   assert.equal(nextUtcReset(null), undefined);
+});
+
+// Shape of the documented /v1/billing/teams/{id}/prepaid/balance response; not checked against a live account.
+// The sign of `total` is assumed to be credits left (positive), amounts in USD cents.
+test("xAI: prepaid balance comes in USD cents", () => {
+  const { stats } = buildXaiUsage({
+    changes: [{ changeOrigin: "PURCHASE", amount: { val: "2000" } }, { changeOrigin: "SPEND", amount: { val: "-760" } }],
+    total: { val: "1240" },
+  } as Parameters<typeof buildXaiUsage>[0]);
+  assert.deepEqual(stats, [{ section: "balance", label: "Prepaid balance", value: "$12.40", short: "$12.40 left" }]);
+});
+
+test("xAI: a missing or unreadable total shows nothing instead of $0.00", () => {
+  assert.deepEqual(buildXaiUsage({}).stats, []);
+  assert.deepEqual(buildXaiUsage({ total: { val: "n/a" } }).stats, []);
+});
+
+test("xAI: the team comes from the scope of a team key, else from the deprecated teamId", () => {
+  assert.equal(teamIdOf({ scope: "SCOPE_TEAM", scopeId: "team-1", teamId: "old" }), "team-1");
+  assert.equal(teamIdOf({ scope: "SCOPE_ORGANIZATION", scopeId: "org-1", teamId: "team-2" }), "team-2");
+  assert.equal(teamIdOf({ scope: "SCOPE_ORGANIZATION", scopeId: "org-1" }), undefined);
 });
 
 const good = {
